@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class BooksService {
@@ -10,18 +10,33 @@ export class BooksService {
   }
 
   async getDetailBooks(id: number) {
-    return `Book with ID ${id}`;
+    return this.prismaService.books.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
   async createBook(body: any) {
-    return 'Created';
+    return this.prismaService.books.create({
+      data: body,
+    });
   }
 
   async updateBook(id: number, body: any) {
-    return 'Update data';
+    return this.prismaService.books.update({
+      data: body,
+      where: {
+        id: id,
+      },
+    });
   }
 
   async deleteBook(id: number) {
-    return `Delete book with ID ${id}`;
+    return this.prismaService.books.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }
