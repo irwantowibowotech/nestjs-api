@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { UpdateBookDto } from './dto/update-book.dto';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @Injectable()
 export class BooksService {
@@ -17,13 +19,13 @@ export class BooksService {
     });
   }
 
-  async createBook(body: any) {
+  async createBook(body: CreateBookDto) {
     return this.prismaService.books.create({
       data: body,
     });
   }
 
-  async updateBook(id: number, body: any) {
+  async updateBook(id: number, body: UpdateBookDto) {
     return this.prismaService.books.update({
       data: body,
       where: {

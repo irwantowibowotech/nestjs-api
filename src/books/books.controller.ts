@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { BooksService } from './books.service';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Controller('books')
 export class BooksController {
@@ -15,13 +17,14 @@ export class BooksController {
     return this.bookService.getDetailBooks(Number(id));
   }
 
+  @UsePipes(ValidationPipe)
   @Post()
-  async addNewBook(@Body() body: any) {
+  async addNewBook(@Body() body: CreateBookDto) {
     return this.bookService.createBook(body);
   }
 
   @Put(':id')
-  async updateBook(@Param('id') id: string, @Body() body: any) {
+  async updateBook(@Param('id') id: string, @Body() body: UpdateBookDto) {
     return this.bookService.updateBook(Number(id), body);
   }
 
