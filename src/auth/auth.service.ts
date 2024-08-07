@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,7 @@ export class AuthService {
       throw new HttpException('User already registered', HttpStatus.FOUND);
     }
 
+    data.password = await hash(data.password, 12);
     const createUser = await this.prismaService.users.create({
       data: data,
     });
