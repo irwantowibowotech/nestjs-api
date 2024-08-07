@@ -3,10 +3,15 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { compare, hash } from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
+import { JwtShared } from 'src/common/shared-functions/jwt.func';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   /**
    * Register new user
@@ -58,9 +63,16 @@ export class AuthService {
     );
 
     if (checkPassword) {
+      const accessToken = new JwtShared(this.jwtService).generateJWT({
+        id: checkUserExists.id,
+        name: checkUserExists.name,
+        email: checkUserExists.email,
+      });
+
       return {
         statusCode: 200,
         message: 'Login successfull',
+        accessToken: accessToken,
       };
     } else {
       throw new HttpException(
